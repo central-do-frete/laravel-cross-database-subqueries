@@ -2,24 +2,34 @@
 
 namespace Hoyvoy\Tests;
 
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
+use Illuminate\Container\Container;
+use Illuminate\Config\Repository;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Events\Dispatcher;
+use Hoyvoy\CrossDatabase\CrossDatabaseServiceProvider;
 
 class TestCase extends BaseTestCase
 {
     protected $tablesPrefix = 'prefix_';
 
-    /**
-     * Get package providers.
-     *
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageProviders($app)
+    protected function setUp(): void
     {
-        return [
-            \Hoyvoy\CrossDatabase\CrossDatabaseServiceProvider::class,
-        ];
+        parent::setUp();
+        $app = new Container();
+        $app->instance('config', new Repository());
+        $this->getEnvironmentSetUp($app);
+        $provider = new CrossDatabaseServiceProvider($app);
+        $provider->register();
+        $app->instance('db', new DatabaseManager($app, $app['db.factory']));
+        $app->instance('events', new Dispatcher($app));
+        $provider->boot();
+        foreach (array_keys($app['config']->get('database.connections')) as $name) {
+            $deny = function () use ($name) {
+                throw new \RuntimeException('Compile-only test attempted database access: '.$name);
+            };
+            $app['db']->connection($name)->setPdo($deny)->setReadPdo($deny);
+        }
     }
 
     /**
@@ -142,17 +152,17 @@ class TestCase extends BaseTestCase
             ],
             'sqlite1' => [
                 'driver'    => 'sqlite',
-                'database'  => __DIR__.'/database/sqlite1.sqlite',
+                'database'  => 'sqlite1',
                 'prefix'    => '',
             ],
             'sqlite2' => [
                 'driver'    => 'sqlite',
-                'database'  => __DIR__.'/database/sqlite2.sqlite',
+                'database'  => 'sqlite2',
                 'prefix'    => $this->tablesPrefix,
             ],
             'sqlite3' => [
                 'driver'    => 'sqlite',
-                'database'  => __DIR__.'/database/sqlite3.sqlite',
+                'database'  => 'sqlite3',
                 'prefix'    => '',
             ],
         ]);
