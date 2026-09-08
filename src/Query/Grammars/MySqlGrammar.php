@@ -17,9 +17,12 @@ class MySqlGrammar extends IlluminateMySqlGrammar
      */
     protected function compileFrom(Builder $query, $table)
     {
+        $tableText = $this->isExpression($table) && !method_exists($table, '__toString')
+            ? (string) $this->getValue($table)
+            : $table;
         // Check for cross database query to attach database name
-        if (strpos($table, '<-->') !== false) {
-            list($prefix, $table, $database) = explode('<-->', $table);
+        if (strpos($tableText, '<-->') !== false) {
+            list($prefix, $table, $database) = explode('<-->', $tableText);
             $wrappedTable = $this->wrapTable($table, true);
             $wrappedTablePrefixed = $this->wrap($prefix.$table, true);
             if ($wrappedTable != $wrappedTablePrefixed) {
