@@ -7,12 +7,18 @@ service provider is discovered by Laravel. Ordinary subselects and `withCount`
 use Laravel's native qualification; the obsolete `withCount` override was removed
 in the Laravel 8 adaptation because it double-qualified the database.
 
-This branch is validated for **MySQL on Laravel 9.52.22 and 10.50.3**. The test
-matrix uses PHP 8.1 and 8.2. Dependency constraints admit Laravel 9 and 10; they
-are not a claim that every patch release, PHP version or relationship shape has
-been exercised. Use this company's repository/version in Composer: the original
-upstream package alone does not select this fork. No Laravel 10 release tag is
-created by this change.
+The current CI and MySQL validation cover **Laravel 9.52.22 and 10.50.3**, using
+PHP 8.1 and 8.2. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
+preserved, with Laravel 10 added. **The older Laravel 5.6–8 range is inherited
+and untested by this CI**; preserving its published requirements is not a new
+claim that every older runtime or patch release was validated.
+
+A bounded check of the older Expression APIs confirms that the new branch stays
+inactive at the inspected 5.6, 6, 7 and 8 checkpoints. That is not a full legacy
+application or database test. Use this company's repository/version in Composer:
+the original upstream package alone does not select this fork. The additive
+release is `9.1.0`, serving both Laravel 9 and 10; a consuming application's
+minimum `^9.1` excludes the earlier tag without this repair.
 
 ## The compatibility seam
 

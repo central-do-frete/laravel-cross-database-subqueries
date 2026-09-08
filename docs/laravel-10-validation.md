@@ -5,6 +5,27 @@ The production change is exactly two methods, ten added / three removed lines
 Regression tests were committed first in `59d0a7f`; the repair is `602b0c8`.
 Neither PostgresGrammar nor SqlServerGrammar changed.
 
+## Requirement-range correction (instruction 038)
+
+The first test-harness commit also narrowed runtime requirements to PHP ^8.0
+and Laravel 9/10. **That exceeded the authorization.** It was not part of the
+two-seam adaptation and should not have been delivered. The published PHP
+`>=7.1.3` requirement is restored verbatim; each published Illuminate range is
+restored with only `|| ^10.0` added. This correction changes no production PHP
+method. The release remains additive, so its version is 9.1.0.
+
+All four PHP 8.1/8.2 × Laravel 9/10 combinations were rerun after the restoration:
+132 test executions / 384 assertions pass, without failures, errors or skips.
+A separate bounded API probe loaded official Grammar, Expression and Macroable
+sources at Laravel 5.6.40, 6.20.45, 7.30.7 and 8.83.29 under offline PHP 7.4.33.
+Across 48 observations, the new predicate was always false, the original value
+was retained, and both marker inspection and relationship marker text matched.
+The inspected grammars recognize Expression instances, whose base class defines
+`__toString`; recognized subclasses inherit that method. Plain strings also
+retain the old path. This verifies the added branch's inactivity at those
+checkpoints, not full legacy framework/database compatibility. CI still covers
+only Laravel 9 and 10; the older published range remains inherited and untested.
+
 ## Test-first evidence
 
 The restored harness uses PHPUnit 9.6 directly instead of Testbench 3.6, which
