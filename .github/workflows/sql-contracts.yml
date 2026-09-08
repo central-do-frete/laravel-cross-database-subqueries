@@ -1,0 +1,30 @@
+name: SQL contracts
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  mysql-contracts:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2']
+        laravel: ['9.52.22', '10.50.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, pdo
+          coverage: none
+          tools: composer:v2
+      - name: Install the framework checkpoint without running package code
+        # These historical framework checkpoints are intentional compatibility inputs.
+        run: >-
+          composer update --with laravel/framework:${{ matrix.laravel }}
+          --no-interaction --prefer-dist --no-scripts --no-plugins
+          --no-security-blocking --no-audit
+      - name: Compile SQL without any network interface or database server
+        run: sudo unshare --net -- "$(command -v php)" vendor/bin/phpunit
