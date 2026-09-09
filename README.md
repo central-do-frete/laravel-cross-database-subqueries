@@ -7,9 +7,9 @@ service provider is discovered by Laravel. Ordinary subselects and `withCount`
 use Laravel's native qualification; the obsolete `withCount` override was removed
 in the Laravel 8 adaptation because it double-qualified the database.
 
-The current CI and MySQL validation cover **Laravel 9.52.22 and 10.50.3**, using
-PHP 8.1 and 8.2. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
-preserved, with Laravel 10 added. **The older Laravel 5.6–8 range is inherited
+The current CI and MySQL validation cover **Laravel 9.52.22 and 10.50.3** on
+PHP 8.1 and 8.2, plus **Laravel 11.56.1 on PHP 8.2**. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
+preserved, with Laravel 10 and 11 added. **The older Laravel 5.6–8 range is inherited
 and untested by this CI**; preserving its published requirements is not a new
 claim that every older runtime or patch release was validated.
 
@@ -17,8 +17,9 @@ A bounded check of the older Expression APIs confirms that the new branch stays
 inactive at the inspected 5.6, 6, 7 and 8 checkpoints. That is not a full legacy
 application or database test. Use this company's repository/version in Composer:
 the original upstream package alone does not select this fork. The additive
-release is `9.1.0`, serving both Laravel 9 and 10; a consuming application's
-minimum `^9.1` excludes the earlier tag without this repair.
+release is `9.2.0`, adding measured Laravel 11 support without changing the
+9.1.0 source. A consuming application's minimum `^9.2` excludes earlier tags
+whose declarations cannot resolve Laravel 11. Published tags are immutable.
 
 ## The compatibility seam
 
@@ -44,10 +45,12 @@ legacy string-SQL assertions are compile-only, not driver support. Anyone who
 needs these drivers must validate their dialects and widen the implementation
 and CI deliberately. SQLite also has only legacy compile assertions here.
 
-Known prefix limitations remain: prefixed count/subselect patterns can produce
-incorrect qualification or prefixed column references. Passing a compile test
-for that existing SQL does not make the query executable. See the
-[validation record](docs/laravel-10-validation.md).
+Known prefix limitations remain on Laravel 9 and 10: prefixed count/subselect
+patterns can produce incorrect qualification or prefixed column references.
+Laravel 11 native table wrapping corrects four recorded MySQL prefix failures;
+this is a framework behavior change, not a fork patch or preservation of the
+old errors. See the [Laravel 10 record](docs/laravel-10-validation.md) and
+[Laravel 11 probe](docs/laravel-11-validation.md).
 
 ## Run the library's tests
 
@@ -55,6 +58,8 @@ for that existing SQL does not make the query executable. See the
 composer update --with laravel/framework:9.52.22 --no-scripts --no-plugins --no-security-blocking --no-audit
 composer test
 composer update --with laravel/framework:10.50.3 --no-scripts --no-plugins --no-security-blocking --no-audit
+composer test
+composer update --with laravel/framework:11.56.1 --no-scripts --no-plugins --no-security-blocking --no-audit
 composer test
 ```
 
@@ -65,8 +70,8 @@ any database access. No application `.env`, real database or credentials are
 needed. `FORK_TEST_AUTOLOAD` optionally selects an existing test-only Composer
 autoloader for a diagnostic run; normal package runs use `vendor/autoload.php`.
 
-[GitHub Actions](.github/workflows/sql-contracts.yml) runs both frameworks on both
-PHP versions. Its test process has a separate network namespace with no network
+[GitHub Actions](.github/workflows/sql-contracts.yml) runs Laravel 9 and 10 on both
+PHP versions, and Laravel 11 on PHP 8.2 (its minimum PHP version). Its test process has a separate network namespace with no network
 interface; dependency acquisition happens earlier with scripts and plugins
 disabled. The library suite does not install a general PHP outbound guard for
 arbitrary new HTTP/mail/process code. Preserve its compile-only boundary, or
