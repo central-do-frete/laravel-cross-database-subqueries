@@ -8,7 +8,9 @@
   network isolation. The README distinguishes MySQL validation from legacy
   compile assertions for other drivers.
 - `docs/laravel-10-validation.md` records the frozen SQL comparison and existing
-  prefix limitations. Do not change those semantics as part of an API adaptation.
+  prefix limitations. `docs/laravel-12-validation.md` records the six-site candidate
+  and the unresolved native connection-clone behavior. Green compile CI alone
+  does not resolve a measured behavior difference or authorize a release.
 
 ## Maintaining this file
 

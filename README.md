@@ -7,9 +7,12 @@ service provider is discovered by Laravel. Ordinary subselects and `withCount`
 use Laravel's native qualification; the obsolete `withCount` override was removed
 in the Laravel 8 adaptation because it double-qualified the database.
 
-The current CI and MySQL validation cover **Laravel 9.52.22 and 10.50.3** on
-PHP 8.1 and 8.2, plus **Laravel 11.56.1 on PHP 8.2**. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
-preserved, with Laravel 10 and 11 added. **The older Laravel 5.6–8 range is inherited
+The current CI covers **Laravel 9.52.22 and 10.50.3** on PHP 8.1 and 8.2,
+**Laravel 11.56.1 on PHP 8.2**, and the **Laravel 12.69.2 candidate on PHP 8.2
+and 8.3**. The candidate is not tagged: the [Laravel 12 validation](docs/laravel-12-validation.md)
+records passing SQL checks and the additional native connection-clone difference
+that still needs an explicit criterion decision. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
+preserved, with Laravel 10/11 added in published releases and Laravel 12 added on this branch. **The older Laravel 5.6–8 range is inherited
 and untested by this CI**; preserving its published requirements is not a new
 claim that every older runtime or patch release was validated.
 
@@ -40,7 +43,9 @@ the unmarked grammar fallback, or raw SQL becomes a quoted table identifier.
 The [tests](tests/Unit/MySqlExpressionTest.php) freeze all three distinctions.
 
 PostgreSQL and SQL Server grammars share the old stringability assumption and
-**were not adapted or validated against database servers**. Their retained
+**have not been validated against database servers**. The Laravel 12 candidate
+adapts their constructor and string-marker prefix APIs only; their raw-Expression
+defects remain. Their retained
 legacy string-SQL assertions are compile-only, not driver support. Anyone who
 needs these drivers must validate their dialects and widen the implementation
 and CI deliberately. SQLite also has only legacy compile assertions here.
@@ -61,6 +66,8 @@ composer update --with laravel/framework:10.50.3 --no-scripts --no-plugins --no-
 composer test
 composer update --with laravel/framework:11.56.1 --no-scripts --no-plugins --no-security-blocking --no-audit
 composer test
+composer update --with laravel/framework:12.69.2 --no-scripts --no-plugins --no-security-blocking --no-audit
+composer test
 ```
 
 The security-blocking option permits these deliberately historical framework
@@ -71,7 +78,7 @@ needed. `FORK_TEST_AUTOLOAD` optionally selects an existing test-only Composer
 autoloader for a diagnostic run; normal package runs use `vendor/autoload.php`.
 
 [GitHub Actions](.github/workflows/sql-contracts.yml) runs Laravel 9 and 10 on both
-PHP versions, and Laravel 11 on PHP 8.2 (its minimum PHP version). Its test process has a separate network namespace with no network
+PHP versions, Laravel 11 on PHP 8.2, and the Laravel 12 candidate on PHP 8.2/8.3. Its test process has a separate network namespace with no network
 interface; dependency acquisition happens earlier with scripts and plugins
 disabled. The library suite does not install a general PHP outbound guard for
 arbitrary new HTTP/mail/process code. Preserve its compile-only boundary, or
