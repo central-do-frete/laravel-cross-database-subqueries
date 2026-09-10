@@ -1,9 +1,11 @@
-# Laravel 12 candidate: six API sites repaired, clone criterion pending
+# Laravel 12: six API sites repaired, clone behavior retained as debt
 
-The proposed 9.3.0 release is **not tagged**. The six authorized production
-changes are committed, but a final connection-clone check found an additional
-native Laravel behavior change that needs an explicit preservation decision.
-The current published application minimum remains 9.2.0.
+Release 9.3.0 contains exactly the six authorized production changes, with
+Laravel 9–11 preservation and the repaired Laravel 12 SQL checked against the
+Laravel 11 oracle. Instruction 074 accepts the additional native clone behavior
+as [debt with an expiry condition](connection-clone-debt.md), because the 97-site
+application audit found no matching trigger. It is still observable in SQL and
+rows when connection cloning is followed by a prefix change.
 
 Tests preceded production: `53b6403` adds twelve independent factory/compiler
 cases covering MySQL, PostgreSQL and SQL Server with empty and nonempty prefixes.
@@ -45,16 +47,26 @@ framework before/after records remain exact. Late prefix changes before cloning
 and initial clone construction match on 12 too. Separately, all 96 query-builder
 clone record pairs match; cloning a query does not clone its connection.
 
-No seventh production change or versioned acceptance test has been added to
-hide this difference. The recommendation is to accept native Laravel 12 clone
-isolation explicitly, then pin that versioned behavior with own tests before
-releasing. Until the criterion is resolved, green SQL CI does not authorize a
-release. The future immutable 9.3.0 tag and consuming application's minimum
-`^9.3` plus actual Composer lock must be delivered together.
+No seventh production change was made. Six versioned connection-lifecycle
+cases now freeze the previously published captures on all three drivers and
+both prefixes. The complete suite passes **55 tests / 180 assertions on each
+of Laravel 9–12**, with no skips or weakened assertions. A separate test-only
+mutation suppresses the native clone hook in each driver in turn; each must
+fail its two affected cases; all three mutations were detected (six deliberate
+failures across eighteen test executions). The production diff remains exactly six methods.
+
+The accepted behavior is not harmless internal state: native Laravel causes it,
+all 24 fork/control records change SQL, and eight ordinary MySQL row comparisons
+change (four fork, four native). All fourteen fork marker row comparisons remain
+equal. See the debt document for the precise expiry condition before introducing
+a new connection-cloning consumer. Immutable tag 9.3.0 and the application's
+minimum `^9.3` plus actual tagged Composer lock are one coordinated delivery.
 
 The application repository owns the full raw evidence and exact probe scripts
 under `docs/codebase/laravel12-fork-repair/`, with the verdict at
-`docs/codebase/LARAVEL12_FORK_REPAIR.md`. Its verifier explicitly reports
-`release_ready: false`. Tests/captures used synthetic inputs, PDO-denying compile
+`docs/codebase/LARAVEL12_FORK_REPAIR.md`. Its historical snapshot verifier explicitly reports
+`release_ready: false`; that preserves the pre-074 decision state, rather than
+retroactively rewriting the evidence. The accepted debt document owns the current
+disposition. Tests/captures used synthetic inputs, PDO-denying compile
 closures or owned disposable MySQL, an offline namespace and a native transport
 guard. No real service, production data or application GraphQL root was used.

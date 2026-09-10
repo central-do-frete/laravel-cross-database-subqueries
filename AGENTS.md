@@ -9,8 +9,9 @@
   compile assertions for other drivers.
 - `docs/laravel-10-validation.md` records the frozen SQL comparison and existing
   prefix limitations. `docs/laravel-12-validation.md` records the six-site candidate
-  and the unresolved native connection-clone behavior. Green compile CI alone
-  does not resolve a measured behavior difference or authorize a release.
+  and the accepted native connection-clone behavior. `docs/connection-clone-debt.md`
+  owns its observable effects and expiry: re-evaluate before a consumer starts
+  cloning database connections. Query cloning does not exercise that path.
 
 ## Maintaining this file
 

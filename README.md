@@ -9,9 +9,10 @@ in the Laravel 8 adaptation because it double-qualified the database.
 
 The current CI covers **Laravel 9.52.22 and 10.50.3** on PHP 8.1 and 8.2,
 **Laravel 11.56.1 on PHP 8.2**, and the **Laravel 12.69.2 candidate on PHP 8.2
-and 8.3**. The candidate is not tagged: the [Laravel 12 validation](docs/laravel-12-validation.md)
-records passing SQL checks and the additional native connection-clone difference
-that still needs an explicit criterion decision. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
+and 8.3**. The [Laravel 12 validation](docs/laravel-12-validation.md) records the measured
+repair. [Connection cloning remains accepted debt](docs/connection-clone-debt.md):
+it changes SQL/rows if triggered, and its current usage-based acceptance has an
+explicit expiry condition. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
 preserved, with Laravel 10/11 added in published releases and Laravel 12 added on this branch. **The older Laravel 5.6–8 range is inherited
 and untested by this CI**; preserving its published requirements is not a new
 claim that every older runtime or patch release was validated.
@@ -20,9 +21,9 @@ A bounded check of the older Expression APIs confirms that the new branch stays
 inactive at the inspected 5.6, 6, 7 and 8 checkpoints. That is not a full legacy
 application or database test. Use this company's repository/version in Composer:
 the original upstream package alone does not select this fork. The additive
-release is `9.2.0`, adding measured Laravel 11 support without changing the
-9.1.0 source. A consuming application's minimum `^9.2` excludes earlier tags
-whose declarations cannot resolve Laravel 11. Published tags are immutable.
+release is `9.3.0`, adding the six measured Laravel 12 API repairs while
+preserving each older framework's recorded behavior. A consuming application's
+minimum `^9.3` excludes earlier tags that lack those repairs. Published tags are immutable.
 
 ## The compatibility seam
 
