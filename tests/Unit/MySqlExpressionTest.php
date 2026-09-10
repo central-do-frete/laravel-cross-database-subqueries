@@ -2,9 +2,8 @@
 
 namespace Hoyvoy\Tests\Unit;
 
-use Hoyvoy\CrossDatabase\Query\Grammars\MySqlGrammar;
+use Hoyvoy\CrossDatabase\MySqlConnection;
 use Hoyvoy\Tests\Fixtures\StringableExpression;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Expression;
 use PHPUnit\Framework\TestCase;
@@ -14,10 +13,10 @@ class MySqlExpressionTest extends TestCase
     /** @dataProvider expressions */
     public function testCompiledSqlRetainsTheLaravel9Contract(array $case): void
     {
-        $connection = new Connection(function () {
+        $connection = new MySqlConnection(function () {
             throw new \RuntimeException('Compile-only test attempted database access');
-        });
-        $grammar = (new MySqlGrammar())->setTablePrefix($case['prefix']);
+        }, 'probe_a', $case['prefix']);
+        $grammar = $connection->getQueryGrammar();
         $expression = $case['name'] === 'customString'
             ? new StringableExpression($case['input'], '<-->users<-->legacy_database')
             : new Expression($case['input']);

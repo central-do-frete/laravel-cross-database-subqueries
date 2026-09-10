@@ -44,10 +44,10 @@ class NativePrefixRepairTest extends TestCase
             },
         ];
         $major = explode('.', Application::VERSION)[0];
-        $this->assertContains($major, ['9', '10', '11'], 'A new framework needs a fresh probe and explicit expectation.');
-        // Laravel 11 repairs the old unknown-database failure. The MySQL replay
+        $this->assertContains($major, ['9', '10', '11', '12'], 'A new framework needs a fresh probe and explicit expectation.');
+        // Laravel 11 repairs the old unknown-database failure; 12 must preserve it. The MySQL replay
         // verifies the rows; this offline suite freezes SQL and binding identity.
-        $expected = $case[$major === '11' ? 'repaired' : 'legacy'];
+        $expected = $case[in_array($major, ['11', '12'], true) ? 'repaired' : 'legacy'];
         $query = $queries[$name]();
         $this->assertSame($expected['sql'], $query->toSql());
         $this->assertSame($expected['bindings'], $query->getBindings());
