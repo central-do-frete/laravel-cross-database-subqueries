@@ -14,6 +14,10 @@ class MySqlConnection extends IlluminateMySqlConnection implements CanCrossDatab
      */
     protected function getDefaultQueryGrammar()
     {
-        return $this->withTablePrefix(new MySqlQueryGrammar());
+        if (method_exists(IlluminateMySqlConnection::class, 'withTablePrefix')) {
+            return $this->withTablePrefix(new MySqlQueryGrammar());
+        }
+
+        return new MySqlQueryGrammar($this);
     }
 }
