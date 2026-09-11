@@ -13,7 +13,7 @@ and 8.3**. The [Laravel 12 validation](docs/laravel-12-validation.md) records th
 repair. [Connection cloning remains accepted debt](docs/connection-clone-debt.md):
 it changes SQL/rows if triggered, and its current usage-based acceptance has an
 explicit expiry condition. The published PHP `>=7.1.3` and Laravel 5.6–9 requirements are
-preserved, with Laravel 10/11 added in published releases and Laravel 12 added on this branch. **The older Laravel 5.6–8 range is inherited
+preserved, with Laravel 10–13 added in published releases. **The older Laravel 5.6–8 range is inherited
 and untested by this CI**; preserving its published requirements is not a new
 claim that every older runtime or patch release was validated.
 
@@ -21,9 +21,15 @@ A bounded check of the older Expression APIs confirms that the new branch stays
 inactive at the inspected 5.6, 6, 7 and 8 checkpoints. That is not a full legacy
 application or database test. Use this company's repository/version in Composer:
 the original upstream package alone does not select this fork. The additive
-release is `9.3.0`, adding the six measured Laravel 12 API repairs while
-preserving each older framework's recorded behavior. A consuming application's
-minimum `^9.3` excludes earlier tags that lack those repairs. Published tags are immutable.
+release is `9.4.0`: it widens only the four runtime Illuminate constraints to
+admit Laravel 13, preserving all production files from `9.3.0` and its six
+Laravel 12 repairs. A consuming application's minimum `^9.4` excludes tags that
+do not declare Laravel 13 compatibility. Published tags are immutable.
+The [Laravel 13 characterization](docs/laravel-13-validation.md) records 688
+compile-only record executions and eight real MySQL pagination cases. Its four
+native alias-quoting differences remain visible. The package's existing CI and
+development dependency range still end at Laravel 12; the separate bounded
+Laravel 13 probes do not constitute a full package or application test suite.
 
 ## The compatibility seam
 
