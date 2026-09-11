@@ -1,0 +1,146 @@
+[
+  {
+    "name": "table",
+    "prefix": "",
+    "input": "probe_a.users",
+    "sql": "select * from probe_a.users where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "alias",
+    "prefix": "",
+    "input": "common.cities as CIT",
+    "sql": "select * from common.cities as CIT where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "quoted",
+    "prefix": "",
+    "input": "`shipping_carrier`.`shipping_carriers`",
+    "sql": "select * from `shipping_carrier`.`shipping_carriers` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "boundUnion",
+    "prefix": "",
+    "input": "(select `id` from `shipper`.`shippers` where document = ? union select shipper_id as id from `shipper`.`shipper_documents` where document = ?) as id",
+    "sql": "select * from (select `id` from `shipper`.`shippers` where document = ? union select shipper_id as id from `shipper`.`shipper_documents` where document = ?) as id where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "pagination",
+    "prefix": "",
+    "input": "(select `status` from `users` group by `status`) as `aggregate_table`",
+    "sql": "select * from (select `status` from `users` group by `status`) as `aggregate_table` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "marker",
+    "prefix": "",
+    "input": "<-->users<-->probe_a",
+    "sql": "select * from `probe_a`.`users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "prefixedMarker",
+    "prefix": "",
+    "input": "p_<-->users<-->probe_a",
+    "sql": "select * from `probe_a`.`p_users` as `users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "customString",
+    "prefix": "",
+    "input": "actual_database.users",
+    "sql": "select * from `legacy_database`.`users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "table",
+    "prefix": "p_",
+    "input": "probe_a.users",
+    "sql": "select * from probe_a.users where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "alias",
+    "prefix": "p_",
+    "input": "common.cities as CIT",
+    "sql": "select * from common.cities as CIT where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "quoted",
+    "prefix": "p_",
+    "input": "`shipping_carrier`.`shipping_carriers`",
+    "sql": "select * from `shipping_carrier`.`shipping_carriers` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "boundUnion",
+    "prefix": "p_",
+    "input": "(select `id` from `shipper`.`shippers` where document = ? union select shipper_id as id from `shipper`.`shipper_documents` where document = ?) as id",
+    "sql": "select * from (select `id` from `shipper`.`shippers` where document = ? union select shipper_id as id from `shipper`.`shipper_documents` where document = ?) as id where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "pagination",
+    "prefix": "p_",
+    "input": "(select `status` from `users` group by `status`) as `aggregate_table`",
+    "sql": "select * from (select `status` from `users` group by `status`) as `aggregate_table` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "marker",
+    "prefix": "p_",
+    "input": "<-->users<-->probe_a",
+    "sql": "select * from `probe_a`.`users` as `p_users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "prefixedMarker",
+    "prefix": "p_",
+    "input": "p_<-->users<-->probe_a",
+    "sql": "select * from `probe_a`.`p_users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  },
+  {
+    "name": "customString",
+    "prefix": "p_",
+    "input": "actual_database.users",
+    "sql": "select * from `legacy_database`.`users` as `p_users` where `status` = ?",
+    "bindings": [
+      "active"
+    ]
+  }
+]

@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "decision": "Instruction 042: accept the Laravel 11 native prefix qualification repair; preserve the historical Laravel 9/10 failure evidence.",
+  "legacyFrameworks": [
+    "9",
+    "10"
+  ],
+  "repairedFrameworks": [
+    "11"
+  ],
+  "cases": {
+    "withCount": {
+      "legacy": {
+        "name": "withCount",
+        "sql": "select `p_users`.*, (select count(*) from `p_p_probe_b`.`orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc",
+        "bindings": [],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "passed": false,
+        "error": "Illuminate\\Database\\QueryException: SQLSTATE[42000]: Syntax error or access violation: 1049 Unknown database 'p_p_probe_b' (Connection: probe_a, SQL: select `p_users`.*, (select count(*) from `p_p_probe_b`.`orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc)"
+      },
+      "repaired": {
+        "name": "withCount",
+        "sql": "select `p_users`.*, (select count(*) from `probe_b`.`p_orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc",
+        "bindings": [],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "actual": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "passed": true
+      }
+    },
+    "whereIn-subquery": {
+      "legacy": {
+        "name": "whereIn-subquery",
+        "sql": "select * from `p_users` where `id` in (select `user_id` from `p_p_probe_b`.`orders` where `status` = ?) order by `id` asc",
+        "bindings": [
+          "paid"
+        ],
+        "expected": [
+          1
+        ],
+        "passed": false,
+        "error": "Illuminate\\Database\\QueryException: SQLSTATE[42000]: Syntax error or access violation: 1049 Unknown database 'p_p_probe_b' (Connection: probe_a, SQL: select * from `p_users` where `id` in (select `user_id` from `p_p_probe_b`.`orders` where `status` = paid) order by `id` asc)"
+      },
+      "repaired": {
+        "name": "whereIn-subquery",
+        "sql": "select * from `p_users` where `id` in (select `user_id` from `probe_b`.`p_orders` where `status` = ?) order by `id` asc",
+        "bindings": [
+          "paid"
+        ],
+        "expected": [
+          1
+        ],
+        "actual": [
+          1
+        ],
+        "passed": true
+      }
+    },
+    "joinSub": {
+      "legacy": {
+        "name": "joinSub",
+        "sql": "select `p_users`.* from `p_users` inner join (select `user_id` from `p_p_probe_b`.`orders` where `status` = ?) as `p_paid_orders` on `p_users`.`id` = `p_paid_orders`.`user_id` order by `p_users`.`id` asc",
+        "bindings": [
+          "paid"
+        ],
+        "expected": [
+          1
+        ],
+        "passed": false,
+        "error": "Illuminate\\Database\\QueryException: SQLSTATE[42000]: Syntax error or access violation: 1049 Unknown database 'p_p_probe_b' (Connection: probe_a, SQL: select `p_users`.* from `p_users` inner join (select `user_id` from `p_p_probe_b`.`orders` where `status` = paid) as `p_paid_orders` on `p_users`.`id` = `p_paid_orders`.`user_id` order by `p_users`.`id` asc)"
+      },
+      "repaired": {
+        "name": "joinSub",
+        "sql": "select `p_users`.* from `p_users` inner join (select `user_id` from `probe_b`.`p_orders` where `status` = ?) as `p_paid_orders` on `p_users`.`id` = `p_paid_orders`.`user_id` order by `p_users`.`id` asc",
+        "bindings": [
+          "paid"
+        ],
+        "expected": [
+          1
+        ],
+        "actual": [
+          1
+        ],
+        "passed": true
+      }
+    },
+    "selectSub": {
+      "legacy": {
+        "name": "selectSub",
+        "sql": "select `p_users`.*, (select count(*) from `p_p_probe_b`.`orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc",
+        "bindings": [],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "passed": false,
+        "error": "Illuminate\\Database\\QueryException: SQLSTATE[42000]: Syntax error or access violation: 1049 Unknown database 'p_p_probe_b' (Connection: probe_a, SQL: select `p_users`.*, (select count(*) from `p_p_probe_b`.`orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc)"
+      },
+      "repaired": {
+        "name": "selectSub",
+        "sql": "select `p_users`.*, (select count(*) from `probe_b`.`p_orders` where `p_users`.`id` = `p_orders`.`user_id`) as `orders_count` from `p_users` order by `id` asc",
+        "bindings": [],
+        "expected": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "actual": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "passed": true
+      }
+    }
+  }
+}

@@ -14,6 +14,10 @@ class SqlServerConnection extends IlluminateSqlServerConnection implements CanCr
      */
     protected function getDefaultQueryGrammar()
     {
-        return $this->withTablePrefix(new SqlServerQueryGrammar());
+        if (method_exists(IlluminateSqlServerConnection::class, 'withTablePrefix')) {
+            return $this->withTablePrefix(new SqlServerQueryGrammar());
+        }
+
+        return new SqlServerQueryGrammar($this);
     }
 }
